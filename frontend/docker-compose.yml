@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile  # Ensure a Dockerfile exists in the project
+    container_name: idurar_app
+    ports:
+      - "8000:8000"  # Expose the application (adjust port if needed)
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@db:5432/idurar_db
+    depends_on:
+      - db
+
+  db:
+    image: postgres:latest
+    container_name: idurar_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: idurar_db
+    ports:
+      - "5432:5432"
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
